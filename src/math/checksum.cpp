@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitcoin/bitcoin/math/checksum.hpp>
+#include <bitcoin/consensus/math/checksum.hpp>
 
-#include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/utility/endian.hpp>
+#include <bitcoin/consensus/math/hash.hpp>
+#include <bitcoin/consensus/utility/endian.hpp>
 
 namespace libbitcoin {
 

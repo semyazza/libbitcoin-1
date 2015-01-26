@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitcoin/bitcoin/math/ec_keys.hpp>
+#include <bitcoin/consensus/math/ec_keys.hpp>
 
 #include <algorithm>
 #include <secp256k1.h>
-#include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
-#include <bitcoin/bitcoin/utility/endian.hpp>
+#include <bitcoin/consensus/math/hash.hpp>
+#include <bitcoin/consensus/utility/assert.hpp>
+#include <bitcoin/consensus/utility/endian.hpp>
 
 namespace libbitcoin {
 
@@ -197,65 +197,6 @@ bool ec_multiply(ec_secret& a, const ec_secret& b)
 {
     init.init();
     return secp256k1_ec_privkey_tweak_mul(a.data(), b.data()) == 1;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// DEPRECATED (now redundant with secp256k1 implementation)
-///////////////////////////////////////////////////////////////////////////////
-ec_secret create_nonce(ec_secret secret, hash_digest hash, unsigned index)
-{
-    init.init();
-
-    hash_digest K
-    {{
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    }};
-    hash_digest V
-    {{
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
-    }};
-
-    K = hmac_sha256_hash(build_data({V, to_byte(0x00), secret, hash}), K);
-    V = hmac_sha256_hash(V, K);
-    K = hmac_sha256_hash(build_data({V, to_byte(0x01), secret, hash}), K);
-    V = hmac_sha256_hash(V, K);
-
-    while (true)
-    {
-        V = hmac_sha256_hash(V, K);
-
-        if (0 == index)
-            return V;
-        --index;
-
-        K = hmac_sha256_hash(build_data({V, to_byte(0x00)}), K);
-        V = hmac_sha256_hash(V, K);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// DEPRECATED (deterministic signatures are safer)
-///////////////////////////////////////////////////////////////////////////////
-endorsement sign(ec_secret secret, hash_digest hash, ec_secret /* nonce */)
-{
-    // THE CALLER'S NONCE IS IGNORED.
-    return sign(secret, hash);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// DEPRECATED (deterministic signatures are safer)
-///////////////////////////////////////////////////////////////////////////////
-compact_signature sign_compact(ec_secret secret, hash_digest hash,
-    ec_secret /* nonce */)
-{
-    // THE CALLER'S NONCE IS IGNORED.
-    return sign_compact(secret, hash);
 }
 
 } // namespace libbitcoin

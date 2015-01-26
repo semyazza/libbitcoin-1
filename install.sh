@@ -1,14 +1,13 @@
 #!/bin/bash
 ###############################################################################
-# Copyright (c) 2011-2014 libbitcoin developers (see COPYING).
+# Copyright (c) 2011-2014 libbitcoin-consensus developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
 ###############################################################################
-# Script to build and install libbitcoin.
+# Script to build and install libbitcoin-consensus.
 #
 # Script options:
-# --build-boost            Builds Boost libraries.
 # --build-dir=<path>       Location of downloaded and intermediate files.
 # --prefix=<absolute-path> Library install location (defaults to /usr/local).
 # --disable-shared         Disables shared library builds.
@@ -28,17 +27,7 @@
 #==============================================================================
 # The default build directory.
 #------------------------------------------------------------------------------
-BUILD_DIR="build-libbitcoin"
-
-# Boost archives for gcc.
-#------------------------------------------------------------------------------
-BOOST_URL_GCC="http://sourceforge.net/projects/boost/files/boost/1.49.0/boost_1_49_0.tar.bz2/download"
-BOOST_ARCHIVE_GCC="boost_1_49_0.tar.bz2"
-
-# Boost archives for clang.
-#------------------------------------------------------------------------------
-BOOST_URL_CLANG="http://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.tar.bz2/download"
-BOOST_ARCHIVE_CLANG="boost_1_54_0.tar.bz2"
+BUILD_DIR="build-libbitcoin-consensus"
 
 # GMP archives.
 #------------------------------------------------------------------------------
@@ -169,54 +158,11 @@ echo "  with_pkgconfigdir: $with_pkgconfigdir"
 
 # Define build options.
 #==============================================================================
-# Define boost options for gcc.
-#------------------------------------------------------------------------------
-BOOST_OPTIONS_GCC=\
-"threading=single "\
-"variant=release "\
-"--disable-icu "\
-"--with-date_time "\
-"--with-filesystem "\
-"--with-program_options "\
-"--with-regex "\
-"--with-system "\
-"--with-test "\
-"-d0 "\
-"-q "\
-"${prefix} "\
-"${boost_link} "
-
-# Define boost options for clang.
-#------------------------------------------------------------------------------
-BOOST_OPTIONS_CLANG=\
-"toolset=clang "\
-"cxxflags=-stdlib=${boost_stdlib} "\
-"linkflags=-stdlib=${boost_stdlib} "\
-"threading=single "\
-"variant=release "\
-"--disable-icu "\
-"--with-date_time "\
-"--with-filesystem "\
-"--with-program_options "\
-"--with-regex "\
-"--with-system "\
-"--with-test "\
-"-d0 "\
-"-q "\
-"${prefix} "\
-"${boost_link} "
-
 # Define secp256k1 options.
 #------------------------------------------------------------------------------
 SECP256K1_OPTIONS=\
 "--enable-tests=no "\
 "--with-bignum=no "
-
-# Define bitcoin options.
-#------------------------------------------------------------------------------
-BITCOIN_OPTIONS=\
-"${with_boost} "\
-"${with_pkgconfigdir} "
 
 
 # Define compiler settings.
@@ -456,9 +402,7 @@ build_from_travis()
 #==============================================================================
 build_all()
 {
-    build_from_tarball_boost $BOOST_URL $BOOST_ARCHIVE boost $PARALLEL $BOOST_OPTIONS
-    build_from_github libbitcoin secp256k1 version2 $PARALLEL "$@" $SECP256K1_OPTIONS
-    build_from_travis libbitcoin libbitcoin version2 $PARALLEL "$@" $BITCOIN_OPTIONS
+    build_from_travis libbitcoin secp256k1 master $PARALLEL "$@" $SECP256K1_OPTIONS
 }
 
 

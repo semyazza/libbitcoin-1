@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/libbitcoin/libbitcoin.svg?branch=master)](https://travis-ci.org/libbitcoin/libbitcoin)
+[![Build Status](https://travis-ci.org/libbitcoin/libbitcoin-consensus.svg?branch=master)](https://travis-ci.org/libbitcoin/libbitcoin-consensus)
 
-# Libbitcoin
+# Libbitcoin Consensus
 
-*The Bitcoin Development Library*
+*The Bitcoin Consensus Library Implementation*
 
 **License Overview**
 
@@ -18,83 +18,68 @@ The libbitcoin toolkit is a set of cross platform C++ libraries for building bit
   * [Debian/Ubuntu](#debianubuntu)
   * [Macintosh](#macintosh)
   * [Windows](#windows)
-  * [Arch Linux](#arch-linux)
-  * [Gentoo Linux](#gentoo-linux)
 
 ## Installation
 
 ### Debian/Ubuntu
 
-Libbitcoin requires a C++11 compiler, currently [GCC 4.8.0](https://gcc.gnu.org/projects/cxx0x.html) minimum. For this reason Ubuntu is not supported prior to version [12.04](http://askubuntu.com/a/271561).
+Libbitcoin requires [GCC 4.8.0](https://gcc.gnu.org/projects/cxx0x.html) minimum.
+
+> For this reason Ubuntu is not supported prior to version 12.04.
 
 To see your GCC version:
+
 ```sh
   $ gcc --version
 ```
-```
-g++ (Ubuntu 4.8.2-19ubuntu1) 4.8.2
-Copyright (C) 2013 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-```
-If necessary, upgrade your compiler as follows:
+If necessary, upgrade your compiler [as follows](http://bit.ly/1vXaaQL):
 ```sh
-$ sudo apt-get install g++-4.8
-$ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
-$ sudo update-alternatives --config g++
+  $ sudo apt-get install g++-4.8
+  $ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+  $ sudo update-alternatives --config g++
 ```
 Next install the [build system](http://en.wikipedia.org/wiki/GNU_build_system):
 ```sh
-$ sudo apt-get install build-essential autoconf automake libtool pkg-config
+  $ sudo apt-get install build-essential autoconf automake libtool pkg-config
 ```
-Next install [Boost](http://www.boost.org) (1.49.0 or newer) and [GMP](https://gmplib.org/)  (5.0.0 or newer):
+Finally, execute the [install script](https://raw.githubusercontent.com/evoskuil/libbitcoin-consensus/develop/install.sh). This single file will download, build, install and test libbitcoin consensus.
 ```sh
-$ sudo apt-get install libboost-all-dev libgmp-dev
-```
-Next download the [install script](https://github.com/libbitcoin/libbitcoin/blob/version2/install.sh) and enable execution:
-```sh
-$ wget https://raw.githubusercontent.com/libbitcoin/libbitcoin/version2/install.sh
-$ chmod +x install.sh
-```
-Finally, install libbitcoin:
-```sh
-$ sudo ./install.sh
+  $ ./install.sh
 ```
 Libbitcoin is now installed in `/usr/local/`.
 
 #### Notes
 
-If you intend to inspect and/or modify source code you should [git clone](http://git-scm.com/docs/git-clone) libbitcoin and each unpackaged dependency and build them manually. The install script itself is commented so that the manual build steps for each dependency can be inferred by a developer.
+If you intend to inspect and/or modify source code you should [git clone](http://git-scm.com/docs/git-clone) libbitcoin consensus and each unpackaged dependency and build them manually. The install script itself is commented so that the manual build steps for each dependency can be inferred by a developer.
 
-You can run the install script from any directory on your system. This will build libbitcoin in a subdirectory named `libbitcoin_build` and install it to `/usr/local/`. When the build completes successfully the `libbitcoin_build` directory is deleted.
+You can run the install script from any directory on your system. This will build libbitcoin consensus in a subdirectory named `libbitcoin-consensus_build` and install it to `/usr/local/`. When the build completes successfully the `libbitcoin-consensus_build` directory is deleted.
 
-The install script should not normally be executed using sudo. Instead it will immediately prompt you for a super user password if required. This ensures that only the necessary installation steps are executed as a super user, as opposed to the entire build process.
+The install script does not require sudo when using a prefix directory.
 
-The build script clones, builds and installs two unpackaged repositories, namely:
+The build script clones, builds and installs six unpackaged repositories, namely:
 
-- [libbitcoin/secp256k1](https://github.com/libbitcoin/secp256k1)
+- [bitcoin/secp256k1](https://github.com/bitcoin/secp256k1)
 - [libbitcoin/libbitcoin](https://github.com/libbitcoin/libbitcoin)
+- [libbitcoin/libbitcoin-consensus](https://github.com/libbitcoin/libbitcoin-consensus)
+- [zeromq/libzmq](https://github.com/zeromq/libzmq)
+- [zeromq/czmq](https://github.com/zeromq/czmq)
+- [zeromq/czmqpp](https://github.com/zeromq/czmqpp)
+
+Of these libraries, only libzmq is packaged. However we require a more recent version of the library in order to take advantage of new features such as the [SOCKS](http://wikipedia.org/wiki/SOCKS) proxy, so we build it as well.
 
 #### Build Options
 
-Any set of `./configure` options can be passed via the build script, for example:
+Any set of `./configure` options can be passed via the install script, for example:
 
 ```sh
-$ ./install.sh CPPFLAGS=-DDEBUG CFLAGS="-Og -g"
+  $ ./install.sh CPPFLAGS=-DDEBUG CFLAGS="-Og -g"
 ```
 
 #### Compiling for Testnet
 
-Currently libbitcoin cannot work with both [testnet](https://en.bitcoin.it/wiki/Testnet) and mainnet. This restriction will be lifted in a future version. In order to work with testnet in the interim libbitcoin must be recompiled with the testnet option:
+Currently libbitcoin cannot work with both [testnet](https://en.bitcoin.it/wiki/Testnet) and mainnet. This restriction will be lifted in a future version. In order to work with testnet in the interim the libbitcoin libraries must be recompiled with the testnet option:
 ```sh
-$ ./install.sh --enable-testnet
-```
-#### Packaging Instructions
-
-To build the Debian package execute the following commands:
-```sh
-$ sudo apt-get install libboost-all-dev fakeroot
-$ dpkg-buildpackage -rfakeroot
+  $ ./install.sh --enable-testnet
 ```
 
 ### Macintosh
@@ -103,19 +88,19 @@ The OSX installation differs from Linux in the installation of the compiler and 
 
 To upgrade GCC first set the following environment variables:
 ```sh
-CC=/usr/local/bin/gcc-4.8
-CXX=/usr/local/bin/g++-4.8
+  CC=/usr/local/bin/gcc-4.8
+  CXX=/usr/local/bin/g++-4.8
 ```
 Next execute the following commands:
 ```sh
-$ brew install boost gmp
-$ brew tap homebrew/versions
-$ brew install gcc48
-$ sudo ln -sf /usr/local/bin/g++-4.8 /usr/bin/g++
+  $ brew install boost
+  $ brew tap homebrew/versions
+  $ brew install gcc48
+  $ sudo ln -sf /usr/local/bin/g++-4.8 /usr/bin/g++
 ```
 Finally, invoke the install script:
 ```sh
-$ ./install.sh
+  $ ./install.sh
 ```
 
 ### Windows
@@ -135,46 +120,27 @@ Libbitcoin requires a C++11 compiler, which means **Visual Studio 2013** minimum
 
 Dependencies apart from the libbitcoin libraries are available as [NuGet packages](https://www.nuget.org/packages?q=evoskuil). The libbitcoin solution files are configured with references to these packages. To avoid redundancies these references expect a [NuGet.config](http://docs.nuget.org/docs/release-notes/nuget-2.1) in a central location.
 
-The required set of NuGet packages can be viewed using the [NuGet package manager](http://docs.nuget.org/docs/start-here/managing-nuget-packages-using-the-dialog) from the libbitcoin solution. The NuGet package manager will automatically download missing packages, either from the build scripts or after prompting you in the Visual Studio environment. For your reference these are the required packages:
+> TODO: provide instructions for creation of the central NuGet repository.
 
-* Packages maintained by [sergey.shandar](http://www.nuget.org/profiles/sergey.shandar)
- * [boost](http://www.nuget.org/packages/boost)
- * [boost\_date\_time-vc120](http://www.nuget.org/packages/boost_date_time-vc120)
- * [boost\_filesystem](http://www.nuget.org/packages/boost_filesystem)
- * [boost\_filesystem-vc120](http://www.nuget.org/packages/boost_filesystem-vc120)
- * [boost\_regex-vc120](http://www.nuget.org/packages/boost_regex-vc120)
- * [boost\_system-vc120](http://www.nuget.org/packages/boost_system-vc120)
- * [boost\_unit\_test\_framework-vc120](http://www.nuget.org/packages/boost_unit_test_framework-vc120)
+The required set of NuGet packages can be viewed using the [NuGet package manager](http://docs.nuget.org/docs/start-here/managing-nuget-packages-using-the-dialog) from the libbitcoin consensus solution. The NuGet package manager will automatically download missing packages, either from the build scripts or after prompting you in the Visual Studio environment. For your reference these are the required packages:
+
 * Packages maintained by [evoskuil](http://www.nuget.org/profiles/evoskuil)
- * [libgmp\_vc120](http://www.nuget.org/packages/libgmp_vc120)
- * [secp256k1\_gmp\_vc120](http://www.nuget.org/packages/secp256k1_gmp_vc120)
-
-> The GMP for Windows project is called [MPIR](http://www.mpir.org) and has binary compatibility with GMP.
+ * [secp256k1\_vc120](http://www.nuget.org/packages/secp256k1_vc120)
 
 #### Build Libbitcoin Projects
 
 After cloning the the repository the libbitcoin build can be performed manually (from within Visual Studio) or using the `buildall.bat` script provided in the `builds\msvc\build\` subdirectory. The scripts automatically download the required NuGet packages.
 
-> Tip: The `buildall.bat` script builds *all* valid configurations. The build time can be significantly reduced by disabling all but the desired configuration in `buildbase.bat`.
+> Tip: The `buildall.bat` script builds *all* valid configurations. The build time can be significantly reduced by disabling all but the desired configuration in the `buildbase.bat` of each project.
 
 > The libbitcoin dynamic (DLL) build configurations do not compile, as the exports have not yet been fully implemented. These are currently disabled in the build scripts but you will encounter numerous errors if you build then manually.
 
 #### Optional: Build Everything
 
-The non-boost packages above are all sourced from GitHub repositories maintained using the same [Visual Studio template](https://github.com/evoskuil/visual-studio-template) as the libbitcoin libraries. If so desired each of these can be built locally, in the same manner as the libbitcoin libraries above. This allows you to avoid using the pre-built NuGet packages. The repositories for each dependency are as follows:
+The packages above are sourced from GitHub repositories maintained using the same [Visual Studio template](https://github.com/evoskuil/visual-studio-template) as the libbitcoin libraries. If so desired each of these can be built locally, in the same manner as the libbitcoin libraries above. This allows you to avoid using the pre-built NuGet packages. The repositories for each dependency are as follows:
 
-* [evoskuil/mpir](https://github.com/evoskuil/mpir)
 * [evoskuil/secp256k1](https://github.com/evoskuil/secp256k1)
 
 This change is properly accomplished by disabling the "NuGet Dependencies" in the Visual Studio properties user interface and then importing the `.import.props` file(s) for the corresponding dependencies.
 
 > TODO: Update libbitcoin with the .import.props files in a disabled configuration. This will allow this transition to be made entirely in the Visual Studio user interface. Then clarify the above explanation.
-
-### Arch Linux
-
-Libbitcoin is available from the [AUR](https://aur.archlinux.org/packages/libbitcoin-git).
-
-### Gentoo Linux
-
-Libbitcoin is available in the 'bitcoin' overlay. Use layman to fetch the overlay then emerge as usual.
-If you want to use live build, unlock the `'**'` keyword for `net-p2p/libbitcoin` in `/etc/portage/package.accept_keywords`
